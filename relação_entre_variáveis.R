@@ -16,7 +16,7 @@ coup <- read.table("./coup.txt", h = T)
 
 traits <- read.table("./traits_community_mean.txt", h = T)
 #write.table(traits, "traits.txt")
-traits %>% head
+
 
 evi2 <- read.table("evi2_estatistic.txt", h = T)
 

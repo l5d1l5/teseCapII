@@ -9,9 +9,12 @@ Neste repositório eu manipulo os dados que utlizei no capítulo II da minha tes
 
 O objetivo é testar se mata seca, mata de galerie e savannas são estados alternativos funcionais e estruturais em uma paisagem heterogênea no Cerrado Brasileiro.
 
-Para isso, usamos dados remotos, como a cobertura do dossel de Hansen et al, dados de precipitação do CHIRPS dataset e dados de satélite do Landsat 8. Utilizamos também dados do Mapbiomas de frequência de fogo e de cobertura do solo. Além disso, ainda utilizei dados coletados em campo como a cobertura do dossel medida <i>in situ</i> com o densiômetro florestal côncavo, altura das árvores, área basal total de cada parcela da vegetação amostrada, espessura de casca de cada árvore e dados das amotras de solo onde avaliamos macro e micro nutrientes, assim como granulometria.
+Para isso, usamos dados remotos e dados coletados em campo. Os dados remotos são a cobertura do dossel de Hansen et al, os dados de precipitação do CHIRPS dataset, os dados de satélite do Landsat 8 e os dados do Mapbiomas de frequência de fogo e de cobertura do solo. Além disso, ainda utilizamos dados coletados em campo como a cobertura do dossel medida <i>in situ</i> com o densiômetro florestal côncavo, altura das árvores, área basal total de cada parcela da vegetação amostrada, espessura de casca de cada árvore e dados das amotras de solo onde avaliamos os macro e micro nutrientes, assim como granulometria.
+O regime de fogo é apontado pela literatura como determinantes da estrutura da vegetação, assim como a fertilidade do solo. Dessa forma, usamos os dados do Mapbiomas de frequência de fogo para ver se o regime de fogo é ou não um determinante da funcionalidade e da estrutura. Da mesma forma usamos os dados de solo coletados em campo e os dados de profundidade de raízes, e profundidade do lençol freático estimados em modelos por Fan et al (2017) - PNAS. Estes dados da Fan et al possuem uma resolução de 1 Km e são bem grosseiros.
+ 
+As **variáveis de estado funcional**, ou seja, aquelas que dão identidade funcional ao sistema, são o acoplamento [i.e.correlação de Kendall entre as médias mensais do índice de vegetação (EVI2 - 2 banded enhanced vegetation index) e da precipitação nos pontos de coleta] o atraso em meses na resposta mais acoplada da vegetação (i.e. maior valor de correlação) e a deciduidade, que é a diferença entre a cobertura do dossel nas estações chuvosa e seca. Os **indicadores de funcionalidade** são os parâmetros (e.g. média, desvio padrão, máximo e amplitude) da série temporal do EVI2 (i.e. indica a fenologia das folhas de cada parcela dentro dos diferentes tipos de vegetação) e os atributos funcionais como a espessura de casca (bark thickness). Os **variáveis de estado estruturais** são a cobertura do dossel (tree cover) tanto a estimada remotamente (i.e. a do Hansen) como a que medimos em campo com o densiômetro florestal côncavo. As **variáveis ambientais** para estimar a heterogeneidade da paisagem provém das amostras de solo e dos modelos da Fan et al (2017).
 
-Primeiramente, vamos ler os dados já previamente processados utilizando os scripts deste repositório.
+Juntando todos os dados, temos:
 
 ```{r, echo = F,include=F}
 library(tidyverse)
@@ -43,6 +46,13 @@ data <- coup %>% add_column(freq_fire = fire[1:30,1]) %>% add_column(tree_cover_
 
 ```
 
+```{r echo=FALSE, include=TRUE, warning=FALSE}
+data %>% knitr::kable()
+```
+
+
+As diferenças podem ser melhor identificadas visualmente através de boxplots como abaixo. Primeiro, mostro as **variáveis de estado funcionais** por tipo de vegetação.
+
 ```{r echo=FALSE, include=FALSE, warning=FALSE}
 a<- data %>% 
   ggplot()+
@@ -72,18 +82,90 @@ c<-data %>%
   ylab("Deciduousness")+
   xlab("Vegetation type")
 
-d <- data %>% 
+```
+
+```{r echo=FALSE, include=TRUE, warning=FALSE}
+(a|b|c)
+```
+
+
+**Indicadores remotos de funcionalidade** são amplamente utilizados na literatura, como os índices de vegetação. Entretanto, estes índices não são necessariamente bons indicadores quando o objetivo é diferenciar os tipos de vegetação, pois eles não capturam o comportamento da série ao longo do tempo.
+
+```{r echo=FALSE, include=FALSE, warning=FALSE}
+a3<-data %>% 
   ggplot()+
-  aes(y = tree_cover_wet, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  aes(y = mean, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
   geom_boxplot(show.legend = FALSE)+
-  ggtitle("Tree cover", subtitle = "densiometer")+
+  ggtitle("Mean EVI2")+
    scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Tree cover (%)")+
+  ylab("Mean EVI2")+
+  xlab("Vegetation type")
+
+b3<-data %>% 
+  ggplot()+
+  aes(y = sd, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Standard deviation EVI2")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Standard deviation EVI2")+
+  xlab("Vegetation type")
+
+c3<-data %>% 
+  ggplot()+
+  aes(y = max, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Maximum EVI2")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Maximum EVI2")+
+  xlab("Vegetation type")
+
+d3<-data %>% 
+  ggplot()+
+  aes(y = range, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Amplitude EVI2")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Amplitude EVI2")+
   xlab("Vegetation type")
 
 ```
 
+
 ```{r echo=FALSE, include=TRUE, warning=FALSE}
-(a|b)/(c|d)
+(a3|b3)/(c3|d3)
 ```
+
+
+Note que a média e o desvio padrão do EVI2 não são bons indicadores de diferenças funcionais entre os diferentes tipos de floresta (i.e. mata seca e mata de galeria), que sabemos possuem respostas às oscilações na chuva (acoplamento e lag) e fenologias totalmente distintas.
+
+Da mesma forma, na escala espacial da paisagem, a cobertura do dossel dos dois tipos de floresta diferem pelo densiômetro florestal, mas não diferem entre si quando analisamos os dados remotos de cobertura do dossel. Em escala continental, florestas são consideradas vegetações com cobertura do dossel acima de 60% e abaixo disso considera-se savanas. Dessa forma, é muito fácil que os diferentes tipos de florestas sejam tratadas da mesma forma ou até mesmo sejam computadas como savanas, o que aumenta o erro das análises e dos modelos.
+
+```{r tree_cover_make, echo=FALSE, include=FALSE, warning=FALSE}
+a4 <- data %>%  ggplot()+
+  aes(x= tree_cover_wet, fill = factor(Vegetation_type))+
+  geom_histogram(show.legend = FALSE)+
+  ggtitle("Tree cover (densiometer)")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Tree cover (%)")+
+  xlab("Vegetation type")
+
+b4 <- data %>% ggplot()+
+  aes(x = tree_cover_hansen, fill = factor(Vegetation_type))+
+  geom_histogram(show.legend = FALSE)+
+  ggtitle("Tree cover (Remote estimation)")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Tree cover (%)")+
+  xlab("Vegetation type")
+```
+
+<p align="center">
+```{r tree_cover_plot, echo=FALSE, include=T, warning=FALSE}
+a4|b4
+```
+</p>
+***
+
+Mesmo assim, alguns trabalhos argumentam que a funcionalidade é correspondente à estrutura da vegetação. Eles se baseiam na área basal e na altura de árvores como variáveis funcionais e que também podem indicar estrutura (Xu et al, 2016; Dantas et al 2021?). Mesmo assim, sabe-se que a altura da árvore influencia no seu funcionamento, uma vez que o fluxo de água no interior da planta depende da diferença de pressão entre o solo e a superfície foliar e que esta pressão depende do comprimento dos vasos.
+
+Nas figuras abaixo, mostro que as **variáveis de estado estruturais** inferidas por área basal e altura de árvores são em parte bons preditores de diferenteças funcionais da vegetação.
 
