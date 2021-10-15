@@ -60,7 +60,7 @@ c<-data %>%
   xlab("Vegetation type")
 
 
-png("state_var.png")
+png("state_var.png", width = 900)
 (a|b|c)
 dev.off()
 
@@ -101,7 +101,7 @@ d3<-data %>%
   xlab("Vegetation type")
 
 
-png("EVI2_vars.png")
+png("EVI2_vars.png", width = 900)
 (a3|b3)/(c3|d3)
 dev.off()
 
@@ -109,19 +109,21 @@ a4 <- data %>%  ggplot()+
   aes(x= tree_cover_wet, fill = factor(Vegetation_type))+
   geom_histogram(show.legend = FALSE)+
   ggtitle("Tree cover (densiometer)")+
+  geom_v(x_intercept=60)+
   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Tree cover (%)")+
-  xlab("Vegetation type")
+  xlab("Tree cover (%)")+
+  ylab("Count")
 
 b4 <- data %>% ggplot()+
   aes(x = tree_cover_hansen, fill = factor(Vegetation_type))+
   geom_histogram(show.legend = FALSE)+
+  geom_v(x_intercept=60)+
   ggtitle("Tree cover (Remote estimation)")+
   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Tree cover (%)")+
-  xlab("Vegetation type")
+  xlab("Tree cover (%)")+
+  ylab("Count")
 
-png("tree_covers.png")
+png("tree_covers.png", width = 900)
 a4|b4
 dev.off()
 
@@ -161,6 +163,6 @@ d5 <- data %>% mutate(Vegetation_type=traits$Vegetation_type) %>%
   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+  ylab("Times burned")+
   xlab("Vegetation type")
 
-png("./traits_e_fogo.png")
+png("./traits_e_fogo.png", width = 900)
 (a5|b5)/(c5|d5)
 dev.off()

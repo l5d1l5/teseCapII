@@ -86,7 +86,7 @@ c<-data %>%
 ```
 
 <p align="center">
-<img align="center" src="./traits_e_fogo.png"/>
+<img align="center" src="./state_var.png"/>
 </p>
 
 **Indicadores remotos de funcionalidade** são amplamente utilizados na literatura, como os índices de vegetação. Entretanto, estes índices não são necessariamente bons indicadores quando o objetivo é diferenciar os tipos de vegetação, pois eles não capturam o comportamento da série ao longo do tempo.
@@ -144,16 +144,16 @@ a4 <- data %>%  ggplot()+
   geom_histogram(show.legend = FALSE)+
   ggtitle("Tree cover (densiometer)")+
    scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Tree cover (%)")+
-  xlab("Vegetation type")
+  xlab("Tree cover (%)")+
+  ylab("Count")
 
 b4 <- data %>% ggplot()+
   aes(x = tree_cover_hansen, fill = factor(Vegetation_type))+
   geom_histogram(show.legend = FALSE)+
   ggtitle("Tree cover (Remote estimation)")+
    scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Tree cover (%)")+
-  xlab("Vegetation type")
+  xlab("Tree cover (%)")+
+  ylab("Count")
 ```
 
 <p align="center">
