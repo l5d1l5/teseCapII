@@ -1,9 +1,9 @@
 ---
-title: Sobre este repositório
+title: "Diferenças estruturais e funcionais entre os tipos de vegetação do Cerrado e seus determinantes"
 author: Marcio Baldissera Cure
 ---
 
-## Análises e figuras para a minha tese
+## O objetivo deste repositório e fazer análises e figuras para a minha tese.
 
 Neste repositório eu manipulo os dados que utlizei no capítulo II da minha tese de doutorad. 
 
@@ -53,7 +53,7 @@ data %>% summary %>% knitr::kable()
 
 As diferenças podem ser melhor identificadas visualmente através de boxplots como abaixo. Primeiro, mostro as **variáveis de estado funcionais** por tipo de vegetação.
 
-```{r echo=FALSE, include=FALSE, warning=FALSE}
+```{r echo=TRUE, include=FALSE, warning=FALSE}
 a<- data %>% 
   ggplot()+
    aes(y = Coup_lag_max, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
@@ -84,14 +84,13 @@ c<-data %>%
 
 ```
 
-```{r echo=FALSE, include=TRUE, warning=FALSE}
-(a|b|c)
-```
-
+<p align="center">
+<img align="center" src="./traits_e_fogo.png"/>
+</p>
 
 **Indicadores remotos de funcionalidade** são amplamente utilizados na literatura, como os índices de vegetação. Entretanto, estes índices não são necessariamente bons indicadores quando o objetivo é diferenciar os tipos de vegetação, pois eles não capturam o comportamento da série ao longo do tempo.
 
-```{r echo=FALSE, include=FALSE, warning=FALSE}
+```{r echo=TRUE, include=FALSE, warning=FALSE}
 a3<-data %>% 
   ggplot()+
   aes(y = mean, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
@@ -130,17 +129,15 @@ d3<-data %>%
 
 ```
 
-
-```{r echo=FALSE, include=TRUE, warning=FALSE}
-(a3|b3)/(c3|d3)
-```
-
+<p align="center">
+<img src="./EVI2_vars.png"/>
+</p>
 
 Note que a média e o desvio padrão do EVI2 não são bons indicadores de diferenças funcionais entre os diferentes tipos de floresta (i.e. mata seca e mata de galeria), que sabemos possuem respostas às oscilações na chuva (acoplamento e lag) e fenologias totalmente distintas.
 
 Da mesma forma, na escala espacial da paisagem, a cobertura do dossel dos dois tipos de floresta diferem pelo densiômetro florestal, mas não diferem entre si quando analisamos os dados remotos de cobertura do dossel. Em escala continental, florestas são consideradas vegetações com cobertura do dossel acima de 60% e abaixo disso considera-se savanas. Dessa forma, é muito fácil que os diferentes tipos de florestas sejam tratadas da mesma forma ou até mesmo sejam computadas como savanas, o que aumenta o erro das análises e dos modelos.
 
-```{r tree_cover_make, echo=FALSE, include=FALSE, warning=FALSE}
+```{r tree_cover_make, echo=TRUE, include=FALSE, warning=FALSE}
 a4 <- data %>%  ggplot()+
   aes(x= tree_cover_wet, fill = factor(Vegetation_type))+
   geom_histogram(show.legend = FALSE)+
@@ -159,9 +156,7 @@ b4 <- data %>% ggplot()+
 ```
 
 <p align="center">
-```{r tree_cover_plot, echo=FALSE, include=T, warning=FALSE, message=FALSE}
-a4|b4
-```
+<img src="./tree_covers.png"/>
 </p>
 
 ***
@@ -170,3 +165,6 @@ Mesmo assim, alguns trabalhos argumentam que a funcionalidade é correspondente 
 
 Nas figuras abaixo, mostro que as **variáveis de estado estruturais** inferidas por área basal e altura de árvores são em parte bons preditores de diferenteças funcionais da vegetação.
 
+<p align="center">
+<img align="center" src="./traits_e_fogo.png"/>
+</p>
