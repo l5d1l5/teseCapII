@@ -9,7 +9,7 @@ library(xts)
 
 # 1. Coupling
 
-coup <- read.table("/home/marcio/Documentos/data/qualificação/coupling", h = T) %>% rename(Vegetation_type=Fitofisionomia)
+coup <- read.table("./coup.txt", h = T) %>% rename(Vegetation_type=Fitofisionomia)
 
 coup$Vegetation_type <- c(rep("savanna", 10),rep("gallery forest", 10),rep("dry forest", 10))
   
@@ -34,7 +34,10 @@ coup$Vegetation_type <- c(rep("savanna", 10),rep("gallery forest", 10),rep("dry 
 	  }
 	}
 
+
 evi2.r <- evi2.r[1:61,]
+
+
 
 ##### EVI2 statistics
 
@@ -78,7 +81,10 @@ amplitude <- maximo-minimo
 
 EVI2par <- cbind(sd = desvio.padrão, max = maximo, mean = media, range = amplitude)
 
-EVI2par1 <- cbind(EVI2par,`Vegetation type` = c(rep("savanna", 10),rep("gallery forest", 10),rep("dry forest", 10),rep("grassland",20)))
+EVI2par1 <- cbind(EVI2par,`Vegetation type` = c(rep("savanna", 10),rep("gallery forest", 10),rep("dry forest", 10),rep("grassland",20))) %>% data.frame
+
+write.table(EVI2par1, "evi2_estatistic.txt")
+
 
 a2<-EVI2par1[1:30,] %>% as_tibble()%>%
   ggplot()+
