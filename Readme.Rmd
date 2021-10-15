@@ -14,7 +14,7 @@ O regime de fogo é apontado pela literatura como determinantes da estrutura da 
  
 As **variáveis de estado funcional**, ou seja, aquelas que dão identidade funcional ao sistema, são o acoplamento [i.e.correlação de Kendall entre as médias mensais do índice de vegetação (EVI2 - 2 banded enhanced vegetation index) e da precipitação nos pontos de coleta] o atraso em meses na resposta mais acoplada da vegetação (i.e. maior valor de correlação) e a deciduidade, que é a diferença entre a cobertura do dossel nas estações chuvosa e seca. Os **indicadores de funcionalidade** são os parâmetros (e.g. média, desvio padrão, máximo e amplitude) da série temporal do EVI2 (i.e. indica a fenologia das folhas de cada parcela dentro dos diferentes tipos de vegetação) e os atributos funcionais como a espessura de casca (bark thickness). Os **variáveis de estado estruturais** são a cobertura do dossel (tree cover) tanto a estimada remotamente (i.e. a do Hansen) como a que medimos em campo com o densiômetro florestal côncavo. As **variáveis ambientais** para estimar a heterogeneidade da paisagem provém das amostras de solo e dos modelos da Fan et al (2017).
 
-Juntando todos os dados, temos:
+Juntando todos os dados, temos um resumo:
 
 ```{r, echo = F,include=F}
 library(tidyverse)
@@ -47,7 +47,7 @@ data <- coup %>% add_column(freq_fire = fire[1:30,1]) %>% add_column(tree_cover_
 ```
 
 ```{r echo=FALSE, include=TRUE, warning=FALSE}
-data %>% knitr::kable()
+data %>% summary %>% knitr::kable()
 ```
 
 
@@ -159,10 +159,11 @@ b4 <- data %>% ggplot()+
 ```
 
 <p align="center">
-```{r tree_cover_plot, echo=FALSE, include=T, warning=FALSE}
+```{r tree_cover_plot, echo=FALSE, include=T, warning=FALSE, message=FALSE}
 a4|b4
 ```
 </p>
+
 ***
 
 Mesmo assim, alguns trabalhos argumentam que a funcionalidade é correspondente à estrutura da vegetação. Eles se baseiam na área basal e na altura de árvores como variáveis funcionais e que também podem indicar estrutura (Xu et al, 2016; Dantas et al 2021?). Mesmo assim, sabe-se que a altura da árvore influencia no seu funcionamento, uma vez que o fluxo de água no interior da planta depende da diferença de pressão entre o solo e a superfície foliar e que esta pressão depende do comprimento dos vasos.
