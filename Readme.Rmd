@@ -1,6 +1,7 @@
 ---
 title: "Diferenças estruturais e funcionais entre os tipos de vegetação do Cerrado e seus determinantes"
-author: Marcio Baldissera Cure
+author: "Marcio Baldissera Cure"
+output: html_notebook
 ---
 
 ## O objetivo deste repositório e fazer análises e figuras para a minha tese.
