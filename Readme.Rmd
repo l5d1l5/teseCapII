@@ -1,0 +1,89 @@
+---
+title: Sobre este repositório
+author: Marcio Baldissera Cure
+---
+
+## Análises e figuras para a minha tese
+
+Neste repositório eu manipulo os dados que utlizei no capítulo II da minha tese de doutorad. 
+
+O objetivo é testar se mata seca, mata de galerie e savannas são estados alternativos funcionais e estruturais em uma paisagem heterogênea no Cerrado Brasileiro.
+
+Para isso, usamos dados remotos, como a cobertura do dossel de Hansen et al, dados de precipitação do CHIRPS dataset e dados de satélite do Landsat 8. Utilizamos também dados do Mapbiomas de frequência de fogo e de cobertura do solo. Além disso, ainda utilizei dados coletados em campo como a cobertura do dossel medida <i>in situ</i> com o densiômetro florestal côncavo, altura das árvores, área basal total de cada parcela da vegetação amostrada, espessura de casca de cada árvore e dados das amotras de solo onde avaliamos macro e micro nutrientes, assim como granulometria.
+
+Primeiramente, vamos ler os dados já previamente processados utilizando os scripts deste repositório.
+
+```{r, echo = F,include=F}
+library(tidyverse)
+library(patchwork)
+library(RColorBrewer)
+```
+
+```{r echo=FALSE, include=FALSE}
+fire <- read.table("./fire_freq_pontos.txt")
+
+tc_field <- read.table("./tc_field.txt", h = T)
+#write.table(tc_field, "tc_field.txt")
+
+tc_hansen <- read.table("./tc_hansen.txt", h = T) 
+#write.table(tc_hansen, "tc_hansen.txt")
+
+
+coup <- read.table("./coup.txt", h = T) 
+#write.table(coup, "coup.txt")
+
+traits <- read.table("./traits_community_mean.txt", h = T)
+#write.table(traits, "traits.txt")
+
+
+evi2 <- read.table("evi2_estatistic.txt", h = T)
+
+deciduousness <- (tc_field$wet-tc_field$dry)
+data <- coup %>% add_column(freq_fire = fire[1:30,1]) %>% add_column(tree_cover_wet = tc_field$wet)%>% add_column(tree_cover_dry = tc_field$dry) %>% add_column(tree_cover_hansen = tc_hansen[1:30,1]) %>% add_column(phenology = deciduousness) %>% add_column(evi2[1:30,1:4]) %>% rename(Vegetation_type=Fitofisionomia)
+
+```
+
+```{r echo=FALSE, include=FALSE, warning=FALSE}
+a<- data %>% 
+  ggplot()+
+   aes(y = Coup_lag_max, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Maximum coupling")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+  ylab("Coupling")+
+  xlab("Vegetation type")
+
+
+b<-data %>% 
+  ggplot()+
+  aes(y = Lag, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Lag in months for the max coupling")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Lag in months")+
+  xlab("Vegetation type")
+
+
+c<-data %>% 
+  ggplot()+
+  aes(y = deciduousness, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Deciduousness", subtitle = "Differentece btw dry and wet seasons")+
+     scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Deciduousness")+
+  xlab("Vegetation type")
+
+d <- data %>% 
+  ggplot()+
+  aes(y = tree_cover_wet, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
+  geom_boxplot(show.legend = FALSE)+
+  ggtitle("Tree cover", subtitle = "densiometer")+
+   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
+  ylab("Tree cover (%)")+
+  xlab("Vegetation type")
+
+```
+
+```{r echo=FALSE, include=TRUE, warning=FALSE}
+(a|b)/(c|d)
+```
+
