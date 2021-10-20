@@ -31,6 +31,8 @@ data <- coup %>% add_column(freq_fire = fire[1:30,1]) %>% add_column(tree_cover_
 
 data %>% knitr::kable() %>% view
 
+# State functional variables that capture long term functionality and particularities of responses through time to oscilations in precipitation.
+
 a<- data %>% 
   ggplot()+
   aes(y = Coup_lag_max, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
@@ -49,7 +51,6 @@ b<-data %>%
   ylab("Lag in months")+
   xlab("Vegetation type")
 
-
 c<-data %>% 
   ggplot()+
   aes(y = deciduousness, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
@@ -63,6 +64,9 @@ c<-data %>%
 png("state_var.png", width = 900)
 (a|b|c)
 dev.off()
+
+
+# Commom remote variables used to describe vegetation functionality.
 
 a3<-data %>% 
   ggplot()+
@@ -84,32 +88,27 @@ b3<-data %>%
 
 c3<-data %>% 
   ggplot()+
-  aes(y = max, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
-  geom_boxplot(show.legend = FALSE)+
-  ggtitle("Maximum EVI2")+
-  scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Maximum EVI2")+
-  xlab("Vegetation type")
-
-d3<-data %>% 
-  ggplot()+
   aes(y = range, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
   geom_boxplot(show.legend = FALSE)+
-  ggtitle("Amplitude EVI2")+
+  ggtitle("Range of EVI2")+
   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
-  ylab("Amplitude EVI2")+
+  ylab("Range of EVI2")+
   xlab("Vegetation type")
 
 
 png("EVI2_vars.png", width = 900)
-(a3|b3)/(c3|d3)
+(a3|b3|c3)
 dev.off()
+
+# Alternative stable states studies used to consider a continental scale, where density probability of tree covers is partially determined by precipitation regimes. Those studies conclude that precipitation regimes partially determine the occurrence of forests and savannas that are defined in terms of tree covers. Those studies used to use the coarse scale data from Hansen and are, actually, the most cited papers regarding forests and savannas as alternative states in the literature. The more fine scale studies embracing differences between vegetation types do not used to focus on tree covers, but on functional traits or on phylogenetic differences. For those studies, the main drivers of distinction among vegetation types are environmental filters that selects for species able to establish, survive, and reproduce under specific environmental conditions and available resources.
+# 
+# Tree cover from Hansen and *in situ* measurement with a concave densiometer to describe vegetation types structurally. We used data from both coarse and fine scales. 
 
 a4 <- data %>%  ggplot()+
   aes(x= tree_cover_wet, fill = factor(Vegetation_type))+
   geom_histogram(show.legend = FALSE)+
   ggtitle("Tree cover (densiometer)")+
-  geom_v(x_intercept=60)+
+  geom_vline(xintercept=60)+
   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
   xlab("Tree cover (%)")+
   ylab("Count")
@@ -117,7 +116,7 @@ a4 <- data %>%  ggplot()+
 b4 <- data %>% ggplot()+
   aes(x = tree_cover_hansen, fill = factor(Vegetation_type))+
   geom_histogram(show.legend = FALSE)+
-  geom_v(x_intercept=60)+
+  geom_vline(xintercept=60)+
   ggtitle("Tree cover (Remote estimation)")+
   scale_fill_manual(values=c("purple", "darkgrey", "orange2"))+
   xlab("Tree cover (%)")+
@@ -127,6 +126,9 @@ png("tree_covers.png", width = 900)
 a4|b4
 dev.off()
 
+
+# Those are functional traits some authors argued that correspond with vegetation structure in terms of tree cover that is used to define alternative stable states.
+ 
 a5 <- traits %>% 
   ggplot()+
   aes(y = Tree_height, fill = factor(Vegetation_type), x = factor(Vegetation_type))+
